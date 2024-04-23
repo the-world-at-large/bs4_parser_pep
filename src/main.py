@@ -1,3 +1,4 @@
+from collections import defaultdict
 import logging
 import re
 from urllib.parse import urljoin
@@ -6,7 +7,6 @@ import requests
 import requests_cache
 from tqdm import tqdm
 
-from collections import defaultdict
 from configs import configure_argument_parser, configure_logging
 from constants import BASE_DIR, EXPECTED_STATUS, MAIN_DOC_URL, PEP_URL
 from outputs import control_output
@@ -15,6 +15,7 @@ from utils import (extract_pep_link, extract_pep_status,
 
 
 def whats_new(session):
+    results = [('Ссылка на статью', 'Заголовок', 'Редактор, Автор')]
     try:
         soup = get_soup(session, MAIN_DOC_URL)
         main_div = find_tag(soup, 'section',
@@ -26,7 +27,6 @@ def whats_new(session):
         sections_by_python = div_with_ul.find_all(
             'li', attrs={'class': 'toctree-l1'})
 
-        results = [('Ссылка на статью', 'Заголовок', 'Редактор, Автор')]
         for section in tqdm(sections_by_python):
             version_a_tag = section.find('a')
             version_link = urljoin(MAIN_DOC_URL, version_a_tag['href'])
@@ -39,18 +39,17 @@ def whats_new(session):
             results.append(
                 (version_link, h1.text, dl_text)
             )
-
-        return results
-
     except Exception as e:
         logging.exception(f'Ошибка при получении информации о новых версиях: '
                           f'{e}')
-        return None
+    return results
 
 
 def latest_versions(session):
     try:
         soup = get_soup(session, MAIN_DOC_URL)
+        if soup is None:
+            return None
 
         sidebar = find_tag(soup, 'div',
                            attrs={'class': 'sphinxsidebarwrapper'})

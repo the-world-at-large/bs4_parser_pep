@@ -7,12 +7,12 @@ from prettytable import PrettyTable
 from constants import BASE_DIR, DATETIME_FORMAT
 
 
-def default_output(results):
+def default_output(results, cli_args=None):
     for row in results:
         print(*row)
 
 
-def pretty_output(results):
+def pretty_output(results, cli_args):
     table = PrettyTable()
     table.field_names = results[0]
     table.align = 'l'
@@ -41,10 +41,11 @@ def file_output(results, cli_args):
 OUTPUT_FUNCTIONS = {
     'pretty': pretty_output,
     'file': file_output,
+    'default': default_output,
 }
 
 
 def control_output(results, cli_args):
     output = cli_args.output
-    output_function = OUTPUT_FUNCTIONS.get(output, default_output)
+    output_function = OUTPUT_FUNCTIONS.get(output, OUTPUT_FUNCTIONS['default'])
     output_function(results, cli_args)

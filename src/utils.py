@@ -8,16 +8,16 @@ from constants import PEP_URL
 from exceptions import ParserFindTagException
 
 
+def extract_pep_link(row):
+    link_tag = find_tag(row, 'a')
+    return urljoin(PEP_URL, link_tag['href'])
+
+
 def extract_pep_status(soup):
     pep_tag = find_tag(soup, 'dl',
                        attrs={'class': 'rfc2822 field-list simple'})
     full_status_pep = (pep_tag.text).split()
     return full_status_pep[full_status_pep.index('Status:') + 1]
-
-
-def extract_pep_link(row):
-    link_tag = find_tag(row, 'a')
-    return urljoin(PEP_URL, link_tag['href'])
 
 
 def find_tag(soup, tag, attrs=None):
