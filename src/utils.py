@@ -29,10 +29,10 @@ def find_tag(soup, tag, attrs=None):
     return searched_tag
 
 
-def get_response(session, url):
+def get_response(session, url, encoding='utf-8'):
     try:
         response = session.get(url)
-        response.encoding = 'utf-8'
+        response.encoding = encoding
         return response
     except RequestException:
         logging.exception(
@@ -42,9 +42,6 @@ def get_response(session, url):
 
 
 def get_soup(session, url):
-    """
-    Получает BeautifulSoup объект из URL
-    """
     response = get_response(session, url)
     if response is None:
         return None

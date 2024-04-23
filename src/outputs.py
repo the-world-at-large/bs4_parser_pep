@@ -7,16 +7,6 @@ from prettytable import PrettyTable
 from constants import BASE_DIR, DATETIME_FORMAT
 
 
-def control_output(results, cli_args):
-    output = cli_args.output
-    if output == 'pretty':
-        pretty_output(results)
-    elif output == 'file':
-        file_output(results, cli_args)
-    else:
-        default_output(results)
-
-
 def default_output(results):
     for row in results:
         print(*row)
@@ -46,3 +36,15 @@ def file_output(results, cli_args):
         logging.info(f'Файл с результатами был сохранён: {file_path}')
     else:
         logging.warning('Нет результатов для сохранения в файл.')
+
+
+OUTPUT_FUNCTIONS = {
+    'pretty': pretty_output,
+    'file': file_output,
+}
+
+
+def control_output(results, cli_args):
+    output = cli_args.output
+    output_function = OUTPUT_FUNCTIONS.get(output, default_output)
+    output_function(results, cli_args)
