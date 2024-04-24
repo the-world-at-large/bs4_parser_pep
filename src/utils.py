@@ -30,19 +30,15 @@ def find_tag(soup, tag, attrs=None):
 
 
 def get_response(session, url, encoding='utf-8'):
-    try:
-        response = session.get(url)
-        response.encoding = encoding
-        return response
-    except RequestException:
-        logging.exception(
-            f'Возникла ошибка при загрузке страницы {url}',
-            stack_info=True,
-        )
+    response = session.get(url)
+    response.encoding = encoding
+    response.raise_for_status()
+    return response
 
 
 def get_soup(session, url):
-    response = get_response(session, url)
-    if response is None:
-        return None
-    return BeautifulSoup(response.text, features='lxml')
+    try:
+        response = get_response(session, url)
+        return BeautifulSoup(response.text, features='lxml')
+    except RequestException as e:
+        raise e
