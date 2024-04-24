@@ -7,7 +7,8 @@ import requests_cache
 from tqdm import tqdm
 
 from configs import configure_argument_parser, configure_logging
-from constants import DOWNLOADS_DIR, EXPECTED_STATUS, MAIN_DOC_URL, PEP_URL
+from constants import (BASE_DIR, EXPECTED_STATUS,
+                       MAIN_DOC_URL, PEP_URL, WHATS_NEW_URL)
 from outputs import control_output
 from utils import (extract_pep_link, extract_pep_status,
                    find_tag, get_soup)
@@ -16,7 +17,7 @@ from utils import (extract_pep_link, extract_pep_status,
 def whats_new(session):
     results = [('Ссылка на статью', 'Заголовок', 'Редактор, Автор')]
 
-    soup = get_soup(session, MAIN_DOC_URL)
+    soup = get_soup(session, WHATS_NEW_URL)
     main_div = find_tag(soup, 'section', attrs={'id': 'what-s-new-in-python'})
     div_with_ul = find_tag(main_div, 'div', attrs={'class': 'toctree-wrapper'})
     sections_by_python = div_with_ul.find_all('li',
@@ -24,7 +25,7 @@ def whats_new(session):
 
     for section in sections_by_python:
         version_a_tag = section.find('a')
-        version_link = urljoin(MAIN_DOC_URL, version_a_tag['href'])
+        version_link = urljoin(WHATS_NEW_URL, version_a_tag['href'])
         soup = get_soup(session, version_link)
         h1 = find_tag(soup, 'h1')
         dl = find_tag(soup, 'dl')
@@ -77,10 +78,11 @@ def download(session):
 
     pdf_a4_link = urljoin(downloads_url, pdf_a4_tag['href'])
 
-    DOWNLOADS_DIR.mkdir(exist_ok=True)
+    downloads_dir = BASE_DIR / 'downloads'
+    downloads_dir.mkdir(exist_ok=True)
 
     filename = pdf_a4_link.split('/')[-1]
-    archive_path = DOWNLOADS_DIR / filename
+    archive_path = downloads_dir / filename
 
     response = session.get(pdf_a4_link)
 
