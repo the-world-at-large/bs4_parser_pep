@@ -14,6 +14,9 @@ LOG_FORMAT = '"%(asctime)s - [%(levelname)s] - %(message)s"'
 
 OUTPUT_CHOICES = ('pretty', 'file')
 
+PRETTY_OUTPUT = 'pretty'
+FILE_OUTPUT = 'file'
+
 EXPECTED_STATUS = {
     'A': ('Active', 'Accepted'),
     'D': ('Deferred',),
