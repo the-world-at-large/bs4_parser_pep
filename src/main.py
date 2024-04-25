@@ -7,7 +7,7 @@ import requests_cache
 from tqdm import tqdm
 
 from configs import configure_argument_parser, configure_logging
-from constants import (BASE_DIR, EXPECTED_STATUS,
+from constants import (BASE_DIR, DOWNLOADS_DIR, EXPECTED_STATUS,
                        MAIN_DOC_URL, PEP_URL, WHATS_NEW_URL)
 from outputs import control_output
 from utils import (extract_pep_link, extract_pep_status,
@@ -78,7 +78,7 @@ def download(session):
 
     pdf_a4_link = urljoin(downloads_url, pdf_a4_tag['href'])
 
-    downloads_dir = BASE_DIR / 'downloads'
+    downloads_dir = BASE_DIR / DOWNLOADS_DIR
     downloads_dir.mkdir(exist_ok=True)
 
     filename = pdf_a4_link.split('/')[-1]
