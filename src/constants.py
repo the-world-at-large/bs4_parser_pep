@@ -2,7 +2,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).parent
 DOWNLOADS_DIR = 'downloads'
-LOG_DIR = 'logs'
+LOGS_DIR = 'logs'
 RESULTS_DIR = 'results'
 
 MAIN_DOC_URL = 'https://docs.python.org/3/'
