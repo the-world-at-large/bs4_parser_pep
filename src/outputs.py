@@ -42,6 +42,7 @@ def file_output(results, cli_args):
 OUTPUT_FUNCTIONS = {
     PRETTY_OUTPUT: pretty_output,
     FILE_OUTPUT: file_output,
+    None: default_output,
 }
 
 

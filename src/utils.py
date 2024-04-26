@@ -2,7 +2,6 @@ import logging
 from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
-from requests import RequestException
 
 from constants import PEP_URL
 from exceptions import ParserFindTagException
@@ -37,8 +36,5 @@ def get_response(session, url, encoding='utf-8'):
 
 
 def get_soup(session, url):
-    try:
-        response = get_response(session, url)
-        return BeautifulSoup(response.text, features='lxml')
-    except RequestException as e:
-        raise e
+    response = get_response(session, url)
+    return BeautifulSoup(response.text, features='lxml')
